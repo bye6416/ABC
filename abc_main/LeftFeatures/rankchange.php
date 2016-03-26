@@ -333,7 +333,7 @@
 		$score = mysql_fetch_array($sql_score);
 		$result=mysql_query("SELECT	SUM(`bankrupt`) FROM `cash` WHERE `cid`='C0".$i."' AND `year`=$pages");
 		$temp = mysql_fetch_array($result);
-		$score_average[$i]=2*$score[3]/3+1*$score[4]/3+0*$score[5]/3-($temp[0]*1000);
+		$score_average[$i]=2*$score[3]/5+2*$score[4]/5+1*$score[5]/5-($temp[0]*1000);
 		//投資人報酬率績效分數、經濟附加價值績效分數、KPI排名分數的各權重分別為五分之二、五分之二、五分之一
 		//有倒閉情形則扣總分1000分
 		//$score_average[$i]=$score['score1']*10000;
