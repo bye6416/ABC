@@ -13,8 +13,9 @@ error_reporting(0);
 <?php 
 include("./connMysql.php");
 
+    //2016.3.26更改成註解  這段指令會檢查資料有無與student_lis資料表t符合
 //------------------------- 驗證ceo的帳號是否重複申請 -------------------------
-
+/*
 if(isset($_POST["c"])){
 	$manAcc=$_POST["c"];
 	
@@ -45,9 +46,10 @@ if(isset($_POST["c"])){
 			echo '</message>';
 			echo "</response>";
 	    }else if($find1 != 0 && $find2==0){
-			//沒註冊過的ceo
-			echo "OK!";
-			
+
+            //沒註冊過的ceo
+			echo "OK!";  
+                
 			//找出其他公司成員
 			$sql3="select * from `student_list` where `cid`='".$cid[0]."' and `isCaptain`='0'";
 			$result3 = mysql_query($sql3) or die("Query failed");
@@ -56,7 +58,7 @@ if(isset($_POST["c"])){
 			echo "<response>\n";
 			echo '<message>';
 			echo '<status>OK</status>';
-			echo "<acc1>".$manAcc."</acc1>";
+            echo "<acc1>".$manAcc."</acc1>";
 			
 			$y=1;
 			while($row3 = mysql_fetch_array($result3)){
@@ -82,6 +84,37 @@ if(isset($_POST["c"])){
      }
 }
 
+*/
+//2016.4.5  新增程式碼，讓輸入的值能成功讀入資料庫
+    if(isset($_POST["c"])){
+	$manAcc=$_POST["c"];
+    if (!@mysql_select_db("testabc_login")) die("資料庫選擇失敗11111!");
+	{
+        $sql ="SELECT * FROM `account` WHERE `Account`='".$manAcc."'";
+		$result = mysql_query($sql) or die("q2f");
+		$find = mysql_num_rows($result) ;
+        if($find==0){
+            //沒註冊過的帳號 
+            echo "<?php xml version =\"1.0\" ?> \n";
+			echo "<response>\n";
+			echo '<message>';
+            echo "<acc1>".$manAcc."</acc1>";
+			echo '<status>OK</status>';
+			echo '</message>';
+			echo "</response>";   
+      }
+      else{
+          echo "<?php xml version =\"1.0\" ?> \n";
+			echo "<response>\n";
+			echo '<message>';
+			echo '<status>NO</status>';
+			echo '</message>';
+			echo "</response>";
+      }
+    
+   }
+}
+    
 //------------------------- register值傳入DB -------------------------
 if(isset($_POST["action"])&&($_POST["action"]=="add")){
 	
@@ -92,13 +125,12 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 			$num_rows1 = mysql_num_rows($result1);
 			
 	  	    $cName=$_POST["cName"];
-			$cid=$_POST["ccid"];
+			$cid=$_POST["cid"];
 			$password=$_POST["Password"];
-			
+           
 			for($i=1;$i<=7;$i++)
 			{	
 		    	$account=$_POST["acc{$i}"];	
-			 
 				$sql_query = "INSERT INTO `account` (`Account`,`Password`,`CompanyID`,`CompanyName`) VALUES (";
 				if($_POST["acc{$i}"]!=""){
 		     	 	$sql_query .= "'".$account."',";
@@ -106,7 +138,7 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 				 	$sql_query .= "'".$cid."',";
 		    	 	$sql_query .= "'".$cName."')";
 				 	//echo $sql_query;
-		     	 	mysql_query($sql_query);	 	
+		     	 	mysql_query($sql_query);
 				}//end if
 			}//end for
 		      
@@ -114,19 +146,17 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
         	$result2 = mysql_query($sql2) or die("Query failed");
 			$num_rows2 = mysql_num_rows($result2);
 			$add = $num_rows2 - $num_rows1;  
-				 
-		   	//echo "<?php xml version =\"1.0\" ?> \n";
-			<?php /*?>echo "<response>\n";
-			echo '<message>';
-			echo '<status>QNO</status>';
-			echo '</message>';
-			echo "</response>";<?php */?> 
-        ?>
+    
+            /*2016.3.26在?>後本來有的亂碼已改成消失*/
+     ?> 
+            
+        
 		<script type="text/javascript">
-			 alert("申請成功!"); 
+			 alert("申請成功了哦哦哦哦哦哦哦哦哦哦！"); 
 			 document.location.href = "./player_login.php";
     	</script>
-		<?php	
+            
+    <?php
 	
 		}//endif
 	}//end if
